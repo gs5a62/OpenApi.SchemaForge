@@ -29,11 +29,3 @@ You can install the package via NuGet Package Manager:
 ```bash
 Install-Package OpenApiSchemaTuner.Net
 ```
-
-
-
-
-<details>
-<summary>Examples</summary>
-aa
-</details>

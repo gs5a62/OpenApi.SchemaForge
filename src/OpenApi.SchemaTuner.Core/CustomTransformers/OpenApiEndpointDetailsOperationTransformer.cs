@@ -52,16 +52,23 @@ internal class OpenApiEndpointDetailsOperationTransformer : IOpenApiOperationTra
 
     private static void HandleRequestParameterDescription(OpenApiOperation operation, ApiParameterDescription parameter)
     {
+        var pp = operation.Parameters?.FirstOrDefault(p => p.Name == parameter.Name);
+
+        if (pp is null)
+            return;
+
         var att = (parameter.ModelMetadata as DefaultModelMetadata)?.Attributes
             .Attributes
             .OfType<OpenApiDescriptionAttribute>()
             .FirstOrDefault();
 
-        if (att is null) return;
+        if (att is null)
+        {
+            pp.Description ??= " ";
+            return;
+        }
 
-        var pp = operation.Parameters.First(p => p.Name == parameter.Name);
-        if (pp is not null)
-            pp.Description += $"<pre>{att.Message}</pre>";
+        pp.Description += $"<pre>{att.Message}</pre>";
     }
 
     private static void DescribeRequestEnums(OpenApiOperation operation)

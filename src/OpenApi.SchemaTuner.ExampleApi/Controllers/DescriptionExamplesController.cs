@@ -30,6 +30,8 @@ public class DescriptionExamplesController : ControllerBase
     {
         [OpenApiDescription("The name of the client")]
         public string? Name { get; set; }
+        public DateTime? DateBefore { get; set; }
+        public DateTime? DateAfter { get; set; }
     }
     
     public class OtherRequestWithDescription
