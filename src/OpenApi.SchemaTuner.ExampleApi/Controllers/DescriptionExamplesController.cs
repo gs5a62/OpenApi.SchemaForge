@@ -15,7 +15,7 @@ public class DescriptionExamplesController : ControllerBase
     }
     
     [HttpGet("list")]
-    public IActionResult EndpointWithQueryParamDescription([FromQuery] RequestWithDescription request)
+    public IActionResult EndpointWithQueryParamDescription([FromQuery] int id, [FromQuery] RequestWithDescription request)
     {
         return Ok();
     }
@@ -32,11 +32,20 @@ public class DescriptionExamplesController : ControllerBase
         public string? Name { get; set; }
         public DateTime? DateBefore { get; set; }
         public DateTime? DateAfter { get; set; }
+        public UserType? UserType1 { get; set; }
+        public UserType UserType2 { get; set; }
+        public IList<UserType> UserType3 { get; set; }
     }
     
     public class OtherRequestWithDescription
     {
         [OpenApiDescription("The expire date")]
         public DateTime? FromDate { get; set; }
+    }
+    
+    public enum UserType
+    {
+        Admin,
+        Guest
     }
 }

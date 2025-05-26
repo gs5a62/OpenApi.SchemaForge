@@ -38,6 +38,9 @@ public class ClientDto
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
+    public DescriptionExamplesController.UserType UserType { get; set; }
+    public DescriptionExamplesController.UserType? UserType1 { get; set; }
+    public IList<DescriptionExamplesController.UserType> UserType2 { get; set; }
 }
 
 public class CreateClientExamples : IOpenApiRequestExamples

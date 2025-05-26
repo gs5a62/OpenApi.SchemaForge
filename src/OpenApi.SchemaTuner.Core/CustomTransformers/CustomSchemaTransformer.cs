@@ -54,25 +54,42 @@ internal sealed class CustomSchemaTransformer : IOpenApiSchemaTransformer
 
     private static void HandleSchemaEnums(OpenApiSchema schema, OpenApiSchemaTransformerContext context)
     {
+        var isEnum = context.JsonTypeInfo.Type.IsEnum;
         var isArrayOfEnum = context.JsonTypeInfo.Type.GetElementType()?.IsEnum is true;
         var isListOfEnum = context.JsonTypeInfo.Type.GenericTypeArguments.Length > 0 &&
                            context.JsonTypeInfo.Type.GenericTypeArguments[0].IsEnum;
 
-        if (context.JsonTypeInfo.Type.IsEnum || isListOfEnum || isArrayOfEnum)
+        var modelType = context.ParameterDescription?
+            .ModelMetadata?.ModelType;
+        var nestedType = modelType?.GenericTypeArguments
+            ?.FirstOrDefault();
+
+        var isNestedEnum = nestedType?.IsEnum is true;
+
+        if (isEnum || isListOfEnum || isArrayOfEnum || isNestedEnum)
         {
             var type = context.JsonTypeInfo.Type;
             if (isArrayOfEnum)
                 type = context.JsonTypeInfo.Type.GetElementType();
             if (isListOfEnum)
                 type = context.JsonTypeInfo.Type.GenericTypeArguments[0];
-
+            if (isNestedEnum)
+                type = nestedType;
+            
+            var isNullable = modelType is not null && Nullable.GetUnderlyingType(modelType) is not null;
             var enumDesc = string.Join(", ",
                 Enum.GetValues(type).Cast<object>()
                     .Select(v => $"{Enum.GetName(type, v)} : {(int)v}"));
 
+            var extraTypeString = string.Empty;
+            if (isArrayOfEnum)
+                extraTypeString = "array of";
+            else if (isListOfEnum)
+                extraTypeString = "list of";
+            
             schema.Description = $"{type.Name} enum " + enumDesc;
-            schema.Type = context.JsonTypeInfo.Type.Name;
-            schema.Format = "enum";
+            schema.Type = $"{extraTypeString} {type.Name}";
+            schema.Format = $"enum{(isNullable ? " | null" : "")}";
         }
     }
 

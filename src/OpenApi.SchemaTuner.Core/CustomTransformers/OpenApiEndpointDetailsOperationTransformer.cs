@@ -17,6 +17,7 @@ internal class OpenApiEndpointDetailsOperationTransformer : IOpenApiOperationTra
         {
             HandleDeprecatedRequestParameters(operation, parameter);
             HandleIgnoredRequestParameters(operation, parameter);
+            DescribeRequestEnums(operation);
             HandleRequestParameterDescription(operation, parameter);
         }
 
@@ -75,7 +76,7 @@ internal class OpenApiEndpointDetailsOperationTransformer : IOpenApiOperationTra
     {
         foreach (var pp in operation.Parameters ?? [])
         {
-            if (pp.Schema.Format != "enum")
+            if (pp.Schema.Format?.StartsWith("enum") is not true)
                 continue;
 
             var enumTypeName = pp.Schema.Items is null ? pp.Schema.Type : pp.Schema.Items.Type;
@@ -84,7 +85,7 @@ internal class OpenApiEndpointDetailsOperationTransformer : IOpenApiOperationTra
                 .GetAssemblies()
                 .Where(a => !a.IsDynamic)
                 .SelectMany(a => a.GetTypes())
-                .FirstOrDefault(t => t.Name == enumTypeName && t.IsEnum);
+                .FirstOrDefault(t => t.Name == enumTypeName.Trim() && t.IsEnum);
 
             if (enumType is null)
                 continue;

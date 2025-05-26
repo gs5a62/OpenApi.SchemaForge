@@ -10,9 +10,9 @@
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
 
         <PackageId>OpenApiSchemaTuner.Net</PackageId>
-        <Version>1.0.0.5</Version>
-        <AssemblyVersion>1.0.0.5</AssemblyVersion>
-        <FileVersion>1.0.0.5</FileVersion>
+        <Version>1.0.0.8</Version>
+        <AssemblyVersion>1.0.0.8</AssemblyVersion>
+        <FileVersion>1.0.0.8</FileVersion>
         <Authors>Ahmed Abdulrahman</Authors>
         <Product>OpenAPI SchemaTuner for .NET</Product>
         <Description>A .NET shelper library for generating OpenAPI schema definitions from fluent metadata or custom configurations.</Description>
